@@ -2,33 +2,32 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuthState } from 'react-firebase-hooks/auth';
 import { motion } from 'framer-motion';
 import { ChevronLeft, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 
-import { auth } from '@/lib/firebase';
+import { useAuth } from '@/lib/hooks/useAuth';
 import CoachChat from '@/components/coaching/CoachChat';
 import { COACH_PERSONAS } from '@/lib/coaches';
 import { Button } from '@/components/ui';
 
 export default function CoachingPage() {
-  const [user, loading] = useAuthState(auth);
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [selectedCoach, setSelectedCoach] = useState<string | null>(null);
   
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/');
+      router.push('/auth');
     }
   }, [user, loading, router]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading coaching session...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yellow-400 mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading coaching session...</p>
         </div>
       </div>
     );
@@ -87,19 +86,19 @@ export default function CoachingPage() {
                   <p className="text-indigo-400 font-semibold">{coach.specialty}</p>
                 </div>
 
-                <p className="text-gray-300 mb-4 text-center italic">
-                  "{coach.catchphrase}"
+                <p className="text-gray-300 mb-4 text-center text-sm">
+                  {coach.description}
                 </p>
 
                 <div className="mb-6">
                   <h4 className="text-sm font-semibold text-gray-400 mb-2">Expertise:</h4>
                   <div className="flex flex-wrap gap-2">
-                    {coach.traits.slice(0, 3).map((trait) => (
+                    {coach.expertise.slice(0, 3).map((expertise) => (
                       <span
-                        key={trait}
+                        key={expertise}
                         className="px-3 py-1 bg-gray-700/50 rounded-full text-xs text-gray-300"
                       >
-                        {trait}
+                        {expertise}
                       </span>
                     ))}
                   </div>

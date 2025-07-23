@@ -13,8 +13,15 @@ You should always be working through all the tasks in the built-in task manageme
 4. **If all high priority tasks are claimed**, then work on medium priority tasks
 5. **Complete your claimed tasks** before claiming new ones
 
+### Task Completion Process
+1. **No Review Stage**: Tasks go directly from "in_progress" to "completed" status
+2. **Direct Completion**: Once a task is implemented and working, mark it as completed immediately
+3. **Use Scripts**: Use `complete-task-direct.js` to mark tasks as completed with implementation notes
+4. **Completion Notes**: Always provide detailed notes about what was implemented when completing a task
+
 ## ⚠️ IMPORTANT: Development Server Rules
-Don't ever spin up your own server instances unless you're fixing build errors. The application is already deployed and running in production.
+1. Don't ever spin up your own server instances unless you're fixing build errors. The application is already deployed and running in production.
+2. **NEVER perform a build unless specifically instructed** by the user to do so.
 
 ## 🎯 Code Quality Standards
 
@@ -179,7 +186,7 @@ interface Task {
   title: string;
   description: string;
   priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'pending' | 'in_progress' | 'review' | 'completed' | 'released';
+  status: 'pending' | 'in_progress' | 'completed' | 'released';  // No 'review' stage
   assignee: 'ai_agent' | 'human' | 'any';
   assignedTo?: string;
   claimedBy?: string;    // Who claimed the task

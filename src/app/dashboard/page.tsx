@@ -196,9 +196,11 @@ export default function DashboardPage() {
           <p className="text-gray-600 mb-6">
             View your personalized meal plan and recipes
           </p>
-          <Button variant="success" className="w-full">
-            View Meal Plan
-          </Button>
+          <Link href="/meals" className="block">
+            <Button variant="success" className="w-full">
+              View Meal Plan
+            </Button>
+          </Link>
         </Card>
       </motion.div>
 
@@ -215,9 +217,11 @@ export default function DashboardPage() {
           <p className="text-gray-600 mb-6">
             Your personalized workout plan is ready
           </p>
-          <Button variant="secondary" className="w-full bg-purple-600 hover:bg-purple-700">
-            Start Workout
-          </Button>
+          <Link href="/workouts" className="block">
+            <Button variant="secondary" className="w-full bg-purple-600 hover:bg-purple-700">
+              Start Workout
+            </Button>
+          </Link>
         </Card>
       </motion.div>
     </div>
