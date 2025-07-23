@@ -6,6 +6,9 @@ A modern fitness tracking application built with Next.js, Firebase, and exceptio
 ## 🎯 IMPORTANT: Task Management System
 You should always be working through all the tasks in the built-in task management system (admin feature) until they're completed. Check the admin dashboard at `/admin/tasks` to see pending tasks, claim tasks assigned to AI agents, and work through them systematically.
 
+## ⚠️ IMPORTANT: Development Server Rules
+Don't ever spin up your own server instances unless you're fixing build errors. The application is already deployed and running in production.
+
 ## 🎯 Code Quality Standards
 
 ### File & Function Size Limits
