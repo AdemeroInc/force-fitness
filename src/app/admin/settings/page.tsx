@@ -129,11 +129,11 @@ export default function AdminSettingsPage() {
     }
   };
 
-  const updateSettings = (path: string, value: any) => {
+  const updateSettings = (path: string, value: string | number | boolean) => {
     setSettings(prev => {
       const keys = path.split('.');
       const newSettings = { ...prev };
-      let current: any = newSettings;
+      let current: Record<string, unknown> = newSettings as Record<string, unknown>;
       
       for (let i = 0; i < keys.length - 1; i++) {
         current = current[keys[i]];
@@ -198,7 +198,7 @@ export default function AdminSettingsPage() {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => setActiveTab(tab.id as 'general' | 'system' | 'security' | 'integrations' | 'maintenance')}
                   className={`
                     py-2 px-1 border-b-2 font-medium text-sm flex items-center gap-2
                     ${activeTab === tab.id

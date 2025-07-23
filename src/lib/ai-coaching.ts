@@ -1,6 +1,6 @@
 // import OpenAI from 'openai';
 import { UserProfile, ChatMessage, WorkoutPlan, MealPlan } from '@/types/coaching';
-import { getCoachPersonality, getCoachExpertise, getCoachById } from './coaches';
+import { getCoachPersonality, getCoachExpertise, getCoachById, COACH_PERSONAS } from './coaches';
 import { db } from './firebase';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, serverTimestamp } from 'firebase/firestore';
 
@@ -299,7 +299,7 @@ export class AICoachingService {
   }
 
   // Enhanced system prompt with better coach characterization
-  private buildEnhancedSystemPrompt(userProfile: UserProfile, coach: any): string {
+  private buildEnhancedSystemPrompt(userProfile: UserProfile, coach: typeof COACH_PERSONAS[0]): string {
     return `
       You are ${coach.name}, an elite AI fitness coach. 
       
@@ -413,7 +413,7 @@ export class AICoachingService {
   }
 
   // Get fallback response for errors
-  private getFallbackResponse(coachId: string, error: any): string {
+  private getFallbackResponse(coachId: string, error: unknown): string {
     const coach = getCoachById(coachId);
     const coachName = coach?.name.split(' ')[0] || 'Coach';
     
@@ -428,14 +428,14 @@ export class AICoachingService {
   }
 
   // Get conversation history from Firebase
-  async getConversationHistory(userId: string, coachId: string, limit = 10): Promise<ChatMessage[]> {
+  async getConversationHistory(userId: string, coachId: string, messageLimit = 10): Promise<ChatMessage[]> {
     try {
       const conversationId = `${userId}-${coachId}`;
       const messagesQuery = query(
         collection(db, 'messages'),
         where('conversationId', '==', conversationId),
         orderBy('timestamp', 'desc'),
-        limit(limit * 2) // Get more to account for user + AI pairs
+        limit(messageLimit * 2) // Get more to account for user + AI pairs
       );
 
       const snapshot = await getDocs(messagesQuery);
@@ -456,7 +456,7 @@ export class AICoachingService {
       });
 
       // Return in chronological order (oldest first)
-      return messages.reverse().slice(-limit);
+      return messages.reverse().slice(-messageLimit);
       
     } catch (error) {
       console.error('Error fetching conversation history:', error);
@@ -470,11 +470,11 @@ export class AICoachingService {
     expertise: string[]
   ): string {
     // Legacy method - keeping for compatibility
-    return this.buildEnhancedSystemPrompt(userProfile, { 
-      name: 'AI Coach', 
-      communicationStyle: coachPersonality, 
-      expertise 
-    });
+    const coach = getCoachById(userProfile.selectedCoach);
+    if (!coach) {
+      throw new Error('Coach not found');
+    }
+    return this.buildEnhancedSystemPrompt(userProfile, coach);
   }
 
   private formatChatHistory(chatHistory: ChatMessage[]): Array<{role: 'user' | 'assistant', content: string}> {
@@ -524,7 +524,7 @@ export class AICoachingService {
 
   // Process streaming response from OpenAI
   private async *processStreamingResponse(
-    stream: AsyncIterable<any>,
+    stream: AsyncIterable<unknown>,
     userProfile: UserProfile,
     userMessage: string
   ): AsyncIterable<string> {
@@ -533,15 +533,19 @@ export class AICoachingService {
 
     try {
       for await (const chunk of stream) {
-        const content = chunk.choices?.[0]?.delta?.content;
-        if (content) {
-          fullResponse += content;
-          yield content;
-        }
+        // Type guard for chunk
+        if (typeof chunk === 'object' && chunk !== null && 'choices' in chunk) {
+          const typedChunk = chunk as { choices?: Array<{ delta?: { content?: string } }>, usage?: { total_tokens?: number } };
+          const content = typedChunk.choices?.[0]?.delta?.content;
+          if (content) {
+            fullResponse += content;
+            yield content;
+          }
 
-        // Track usage if available
-        if (chunk.usage) {
-          totalTokens = chunk.usage.total_tokens;
+          // Track usage if available
+          if (typedChunk.usage?.total_tokens) {
+            totalTokens = typedChunk.usage.total_tokens;
+          }
         }
       }
 

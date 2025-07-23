@@ -186,7 +186,7 @@ export default function ProfileSurvey({ onComplete, onBack }: ProfileSurveyProps
               <Crown size={20} className="mr-2" />
               FITNESS EXPERIENCE
             </motion.div>
-            <h3 className="text-2xl font-black text-white mb-2">What's Your Level?</h3>
+            <h3 className="text-2xl font-black text-white mb-2">What&apos;s Your Level?</h3>
             <p className="text-gray-400">Help us customize your training intensity</p>
           </div>
           

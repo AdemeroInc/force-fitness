@@ -20,5 +20,5 @@ export interface Task {
   tags: string[];
   dependencies?: string[];
   createdBy: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }

@@ -31,9 +31,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   disabled,
   children,
   className = '',
-  onDrag,
-  onDragEnd,
-  onDragStart,
   ...props
 }, ref) => {
   const isDisabled = disabled || loading;
@@ -50,7 +47,22 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
       whileHover={!isDisabled ? { scale: 1.02 } : {}}
       whileTap={!isDisabled ? { scale: 0.98 } : {}}
       transition={{ duration: 0.1 }}
-      {...props}
+      onClick={props.onClick}
+      onFocus={props.onFocus}
+      onBlur={props.onBlur}
+      onMouseEnter={props.onMouseEnter}
+      onMouseLeave={props.onMouseLeave}
+      onKeyDown={props.onKeyDown}
+      onKeyUp={props.onKeyUp}
+      type={props.type}
+      name={props.name}
+      value={props.value}
+      id={props.id}
+      tabIndex={props.tabIndex}
+      aria-label={props['aria-label']}
+      aria-describedby={props['aria-describedby']}
+      aria-pressed={props['aria-pressed']}
+      role={props.role}
     >
       {loading ? (
         <div className="flex items-center justify-center">

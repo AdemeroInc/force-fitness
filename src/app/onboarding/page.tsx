@@ -55,7 +55,7 @@ const ONBOARDING_STEPS = [
 
 interface OnboardingData {
   selectedCoach: string | null;
-  surveyData: any;
+  surveyData: Partial<UserProfile>;
   completedAt?: Date;
 }
 
@@ -118,7 +118,7 @@ export default function OnboardingPage() {
   };
 
   // Handle survey completion
-  const handleSurveyComplete = (surveyData: any) => {
+  const handleSurveyComplete = (surveyData: Partial<UserProfile>) => {
     const updatedData = { ...onboardingData, surveyData };
     setOnboardingData(updatedData);
     saveProgress(currentStep + 1, updatedData);
@@ -253,7 +253,7 @@ export default function OnboardingPage() {
       </h1>
       
       <p className="text-2xl text-gray-300 mb-8 leading-relaxed">
-        The world's most advanced AI-powered fitness coaching platform designed for 
+        The world&apos;s most advanced AI-powered fitness coaching platform designed for 
         <span className="text-yellow-400 font-bold"> artists, celebrities, and high-achievers</span> who demand excellence.
       </p>
       

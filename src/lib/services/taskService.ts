@@ -11,6 +11,8 @@ import {
   orderBy,
   serverTimestamp,
   Timestamp,
+  FieldValue,
+  UpdateData,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Task, TaskStatus, TaskPriority } from '@/types/task';
@@ -88,10 +90,17 @@ export const taskService = {
 
   async updateTask(taskId: string, updates: Partial<Task>): Promise<void> {
     const taskRef = doc(db, TASKS_COLLECTION, taskId);
-    const updateData: any = {
-      ...updates,
+    const updateData: UpdateData<Task> = {
       updatedAt: serverTimestamp(),
     };
+
+    // Copy allowed fields from updates
+    const allowedFields: (keyof Task)[] = ['title', 'description', 'status', 'priority', 'assignedTo', 'tags', 'dueDate', 'completedAt', 'releasedAt', 'claimedBy', 'claimedAt', 'assignee', 'metadata'];
+    for (const field of allowedFields) {
+      if (field in updates && updates[field] !== undefined) {
+        updateData[field] = updates[field] as FieldValue;
+      }
+    }
 
     if (updates.dueDate) {
       updateData.dueDate = Timestamp.fromDate(updates.dueDate);
@@ -113,12 +122,12 @@ export const taskService = {
   },
 
   async updateTaskStatus(taskId: string, status: TaskStatus): Promise<void> {
-    const updates: any = { status };
+    const updates: Partial<Task> = { status };
     
     if (status === 'completed') {
-      updates.completedAt = serverTimestamp();
+      updates.completedAt = new Date();
     } else if (status === 'released') {
-      updates.releasedAt = serverTimestamp();
+      updates.releasedAt = new Date();
     }
     
     await this.updateTask(taskId, updates);

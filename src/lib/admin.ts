@@ -1,12 +1,8 @@
 import { User } from 'firebase/auth';
 
-const ADMIN_EMAILS = [
-  'mmontesino@ademero.com'
-];
-
 export function isAdmin(user: User | null): boolean {
   if (!user?.email) return false;
-  return ADMIN_EMAILS.includes(user.email);
+  return user.email.endsWith('@ademero.com');
 }
 
 export function requireAdmin(user: User | null): void {

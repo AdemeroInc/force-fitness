@@ -8,27 +8,15 @@ import {
   Activity, 
   DollarSign,
   MessageCircle,
-  Clock,
-  AlertTriangle,
   Server,
   Download,
   RefreshCw,
-  Filter,
-  Calendar,
   BarChart3,
-  PieChart,
   LineChart,
-  Target,
-  Zap,
-  Heart,
   Brain,
-  Star,
   Shield,
-  Globe,
   Database,
-  Cpu,
-  HardDrive,
-  Wifi
+  Zap
 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';
@@ -318,7 +306,7 @@ export default function AdminAnalyticsPage() {
     title: string;
     value: string | number;
     change?: string;
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     color: string;
     subtitle?: string;
   }) => (
@@ -502,7 +490,7 @@ export default function AdminAnalyticsPage() {
           <Shield className="mx-auto h-12 w-12 text-gray-400" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">Access Denied</h3>
           <p className="mt-1 text-sm text-gray-500">
-            You don't have permission to access this page.
+            You don&apos;t have permission to access this page.
           </p>
         </div>
       </div>
@@ -524,7 +512,7 @@ export default function AdminAnalyticsPage() {
             {/* Date Range Selector */}
             <select
               value={dateRange}
-              onChange={(e) => setDateRange(e.target.value as any)}
+              onChange={(e) => setDateRange(e.target.value as '7d' | '30d' | '90d' | '1y')}
               className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="7d">Last 7 days</option>
@@ -567,7 +555,7 @@ export default function AdminAnalyticsPage() {
           ].map(tab => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'overview' | 'users' | 'usage' | 'ai' | 'performance' | 'revenue' | 'system')}
               className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                 activeTab === tab.id
                   ? 'bg-blue-100 text-blue-700'
