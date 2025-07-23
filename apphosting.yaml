@@ -5,30 +5,32 @@ env:
   - variable: NODE_ENV
     value: production
   - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyCL_snsu3sNg2LP4oTkmFN6RSxuPr2S9Jw
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: force-fitness-1753281211.firebaseapp.com
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: force-fitness-1753281211
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: force-fitness-1753281211.firebasestorage.app
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "77830233576"
     availability:
       - BUILD
       - RUNTIME
   - variable: NEXT_PUBLIC_FIREBASE_APP_ID
-    availability:
-      - BUILD
-      - RUNTIME
-  - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+    value: 1:77830233576:web:0440ebd1d36e295fb1d85d
     availability:
       - BUILD
       - RUNTIME

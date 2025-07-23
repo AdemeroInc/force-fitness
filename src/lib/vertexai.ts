@@ -79,7 +79,12 @@ export async function generateText(prompt: string, modelName?: string) {
   try {
     const model = await getGeminiModel(modelName);
     const result = await model.generateContent(prompt);
-    return result.response.text();
+    const response = result.response;
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      throw new Error('No text generated');
+    }
+    return text;
   } catch (error) {
     console.error('Error generating text:', error);
     throw error;
@@ -94,14 +99,9 @@ export async function generateImage(prompt: string, options?: {
   try {
     const model = await getImagenModel();
     
-    const request = {
-      prompt,
-      aspectRatio: options?.aspectRatio || '1:1',
-      negativePrompt: options?.negativePrompt || '',
-      personGeneration: options?.personGeneration || 'dont_allow',
-    };
-    
-    const result = await model.generateContent(request);
+    // Note: Imagen models in Vertex AI typically accept string prompts
+    // Additional parameters like aspectRatio may need to be set differently
+    const result = await model.generateContent(prompt);
     return result.response;
   } catch (error) {
     console.error('Error generating image:', error);

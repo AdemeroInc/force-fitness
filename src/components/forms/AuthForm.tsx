@@ -71,8 +71,8 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
         await signInWithEmail(formData.email, formData.password);
       }
       onSuccess?.();
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -85,8 +85,8 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
     try {
       await signInWithGoogle();
       onSuccess?.();
-    } catch (err: any) {
-      setError(err.message || 'Google sign-in failed');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Google sign-in failed');
     } finally {
       setLoading(false);
     }

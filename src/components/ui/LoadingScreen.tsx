@@ -261,7 +261,7 @@ export default function LoadingScreen({
               <div className="flex items-center justify-center mb-2">
                 <Star size={16} className="text-yellow-400 mr-2" />
                 <p className="text-gray-400 text-sm font-medium italic">
-                  "Greatness is not a destination, it's a way of traveling"
+                  &ldquo;Greatness is not a destination, it&apos;s a way of traveling&rdquo;
                 </p>
                 <Star size={16} className="text-yellow-400 ml-2" />
               </div>
