@@ -6,6 +6,13 @@ A modern fitness tracking application built with Next.js, Firebase, and exceptio
 ## 🎯 IMPORTANT: Task Management System
 You should always be working through all the tasks in the built-in task management system (admin feature) until they're completed. Check the admin dashboard at `/admin/tasks` to see pending tasks, claim tasks assigned to AI agents, and work through them systematically.
 
+### Task Priority Rules - CRITICAL
+1. **ALWAYS work on tasks in priority order**: Urgent → High → Medium → Low
+2. **NEVER skip a higher priority task** to work on a lower priority one
+3. **Check for new urgent/high priority tasks** before starting any medium/low priority work
+4. **If all high priority tasks are claimed**, then work on medium priority tasks
+5. **Complete your claimed tasks** before claiming new ones
+
 ## ⚠️ IMPORTANT: Development Server Rules
 Don't ever spin up your own server instances unless you're fixing build errors. The application is already deployed and running in production.
 
