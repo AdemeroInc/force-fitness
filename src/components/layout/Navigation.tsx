@@ -38,6 +38,10 @@ const navItems: NavItem[] = [
   { href: '/profile', label: 'Profile', icon: Settings },
 ];
 
+const adminNavItems: NavItem[] = [
+  { href: '/admin', label: 'Admin', icon: Crown },
+];
+
 export default function Navigation() {
   const pathname = usePathname();
   const [user, loading] = useAuthState(auth);
@@ -51,7 +55,10 @@ export default function Navigation() {
   };
 
   const renderNavItems = (): JSX.Element[] => {
-    return navItems.map((item, index) => {
+    const isAdmin = user?.email?.endsWith('@ademero.com') || false;
+    const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
+    
+    return allNavItems.map((item, index) => {
       const Icon = item.icon;
       const isActive = pathname === item.href;
       
