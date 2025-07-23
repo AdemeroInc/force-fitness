@@ -2,7 +2,7 @@ import { CoachPersona } from '@/types/coaching';
 
 export const COACH_PERSONAS: CoachPersona[] = [
   {
-    id: 'elite-performance',
+    id: 'marcus',
     name: 'Marcus "The Elite" Thompson',
     specialty: 'High-Performance Athletics',
     description: 'Former Olympic strength coach with 15+ years training elite athletes. Results-driven and intense approach.',
@@ -20,7 +20,7 @@ export const COACH_PERSONAS: CoachPersona[] = [
     communicationStyle: 'Direct and intense. Uses military-style motivation. Focuses on measurable results and breaking personal records. Expects commitment and discipline.'
   },
   {
-    id: 'wellness-guru',
+    id: 'serena',
     name: 'Dr. Serena Mindful',
     specialty: 'Holistic Wellness & Mindfulness',
     description: 'PhD in Exercise Psychology, certified yoga instructor. Integrates mind-body connection for sustainable health.',
@@ -38,7 +38,7 @@ export const COACH_PERSONAS: CoachPersona[] = [
     communicationStyle: 'Gentle and encouraging. Uses mindfulness principles. Focuses on the journey rather than just destination. Emphasizes self-compassion and balance.'
   },
   {
-    id: 'science-based',
+    id: 'alex',
     name: 'Dr. Alex "The Scientist" Rodriguez',
     specialty: 'Evidence-Based Training',
     description: 'Exercise Physiologist with PhD in Sports Science. Data-driven approach backed by latest research.',
@@ -56,7 +56,7 @@ export const COACH_PERSONAS: CoachPersona[] = [
     communicationStyle: 'Methodical and educational. Explains the "why" behind everything. Uses data and studies to support recommendations. Adjusts based on metrics and feedback.'
   },
   {
-    id: 'motivational-champion',
+    id: 'riley',
     name: 'Coach Riley "The Champion" Johnson',
     specialty: 'Motivational Fitness Coaching',
     description: 'Former competitive bodybuilder turned motivational fitness coach. High-energy, positive reinforcement approach.',

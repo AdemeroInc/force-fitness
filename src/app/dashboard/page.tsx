@@ -175,9 +175,11 @@ export default function DashboardPage() {
           <p className="text-gray-600 mb-6">
             Get personalized advice and motivation from your AI coach
           </p>
-          <Button className="w-full">
-            Start Conversation
-          </Button>
+          <Link href="/coaching" className="block">
+            <Button className="w-full">
+              Start Conversation
+            </Button>
+          </Link>
         </Card>
       </motion.div>
 
