@@ -20,6 +20,7 @@ Force Fitness transcends traditional fitness apps by understanding the unique ch
 ### Technical Architecture
 - [System Architecture](./technical-architecture.md) - Overall system design
 - [Firebase Integration](./firebase-integration.md) - Backend infrastructure
+- [Firebase Development Guide](./firebase-development-guide.md) - Firestore interaction patterns and development workflows
 - [Imagen 3 Integration](./imagen-3-integration.md) - AI image generation with Google's Imagen 3
 - [Frontend Architecture](./frontend-architecture.md) - Next.js implementation
 

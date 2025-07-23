@@ -114,24 +114,80 @@ export default function Component({ prop }: ComponentProps) {
 - Implement proper loading states
 - Optimize images and assets
 
-## 🚀 Firebase Integration
+## 🚀 Google Services Integration
 
-### Authentication
-- Email/Password authentication
-- Google OAuth integration
-- Protected routes with middleware
-- User session management
+### Firebase Project Configuration
+- **Project ID**: `force-fitness-1753281211`
+- **Environment**: Production Firebase project
+- **Hosting**: Firebase App Hosting (not traditional Firebase Hosting)
+- **Region**: Multi-region deployment
+
+### Authentication Setup
+- **Client Config**: Environment variables in `.env.local`
+- **Admin Operations**: Use `gcloud auth application-default login`
+- **Admin Scripts**: Firebase Admin SDK with application default credentials
+- **User Permissions**: Admin access requires `@ademero.com` email domain
 
 ### Database (Firestore)
-- Real-time data synchronization
-- Optimistic updates for better UX
-- Proper error handling
-- Data validation and security rules
+- **Collections**: `tasks`, `users`, `conversations`, `messages`, `workouts`, `mealPlans`, `progress`, `analytics`
+- **Task Schema**: Includes `claimedBy`, `claimedAt` fields for AI agent task management
+- **Security Rules**: Admin-only access for task management, user-specific access for personal data
+- **Timestamp Handling**: Always use `serverTimestamp()` for server operations, convert to Date objects in client
+- **Batch Operations**: Use Firebase Admin SDK batch writes for multiple document operations
+
+### Development Authentication
+```bash
+# Required setup for server-side Firebase operations
+gcloud config set project force-fitness-1753281211
+gcloud auth application-default login
+npm install firebase-admin  # For server-side scripts
+```
+
+### Client-Side Firebase
+```typescript
+// Use React Firebase Hooks for authentication state
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+// Service pattern for database operations
+const taskService = {
+  claimTask: async (taskId: string, claimedBy: string) => {
+    // Updates task status to in_progress and sets claimedBy/claimedAt
+  },
+  getClaimedTasks: async (claimedBy: string) => {
+    // Gets tasks claimed by specific AI agent or user
+  }
+};
+```
+
+### Task Management Schema
+```typescript
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  status: 'pending' | 'in_progress' | 'review' | 'completed' | 'released';
+  assignee: 'ai_agent' | 'human' | 'any';
+  assignedTo?: string;
+  claimedBy?: string;    // Who claimed the task
+  claimedAt?: Date;      // When task was claimed
+  createdAt: Date;
+  updatedAt: Date;
+  dueDate?: Date;
+  completedAt?: Date;
+  releasedAt?: Date;
+  tags: string[];
+  dependencies?: string[];
+  createdBy: string;
+  metadata?: Record<string, any>;
+}
+```
 
 ### Storage
-- Image upload for user profiles
-- File size and type validation
-- Progressive loading for media
+- **Profile Images**: User profile photo uploads
+- **Progress Photos**: Body transformation tracking
+- **File Validation**: Size limits and type restrictions
+- **Progressive Loading**: Optimized image delivery
 
 ## 📱 Responsive Design
 
