@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
   const currentCoach = COACH_PERSONAS.find(coach => coach.id === selectedCoach);
 
-  const renderWelcomeSection = (): JSX.Element => (
+  const renderWelcomeSection = () => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -99,7 +99,7 @@ export default function DashboardPage() {
     </motion.div>
   );
 
-  const renderStatsGrid = (): JSX.Element => (
+  const renderStatsGrid = () => (
     <div className="grid md:grid-cols-4 gap-6 mb-8">
       {[
         { 
@@ -160,7 +160,7 @@ export default function DashboardPage() {
     </div>
   );
 
-  const renderQuickActions = (): JSX.Element => (
+  const renderQuickActions = () => (
     <div className="grid lg:grid-cols-3 gap-6 mb-8">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -227,7 +227,7 @@ export default function DashboardPage() {
     </div>
   );
 
-  const renderRecentActivity = (): JSX.Element => (
+  const renderRecentActivity = () => (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}

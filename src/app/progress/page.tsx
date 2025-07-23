@@ -21,7 +21,8 @@ import {
   Upload,
   BarChart3,
   PieChart,
-  LineChart
+  LineChart,
+  Clock
 } from 'lucide-react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { db } from '@/lib/firebase';

@@ -1,13 +1,14 @@
-import OpenAI from 'openai';
+// import OpenAI from 'openai';
 import { UserProfile, ChatMessage, WorkoutPlan, MealPlan } from '@/types/coaching';
 import { getCoachPersonality, getCoachExpertise, getCoachById } from './coaches';
 import { db } from './firebase';
 import { collection, addDoc, query, where, orderBy, limit, getDocs, serverTimestamp } from 'firebase/firestore';
 
 // Initialize OpenAI with fallback for development
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || 'demo-key',
-});
+// TODO: Replace with Gemini API
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY || 'demo-key',
+// });
 
 // Rate limiting and token tracking
 interface TokenUsage {
@@ -42,6 +43,53 @@ export class AICoachingService {
     return AICoachingService.instance;
   }
 
+  async generateStreamingResponse(
+    userMessage: string,
+    userProfile: UserProfile,
+    chatHistory: ChatMessage[] = []
+  ): Promise<AsyncIterable<string>> {
+    // Check rate limits
+    if (!this.checkRateLimit(userProfile.userId)) {
+      throw new Error('Rate limit exceeded. Please wait before sending another message.');
+    }
+
+    // Mock streaming response if no API key (for development)
+    if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'demo-key') {
+      return this.generateMockStreamingResponse(userMessage, userProfile);
+    }
+
+    const coach = getCoachById(userProfile.selectedCoach);
+    if (!coach) {
+      throw new Error('Coach not found');
+    }
+
+    const systemPrompt = this.buildEnhancedSystemPrompt(userProfile, coach);
+    const conversationHistory = this.formatChatHistory(chatHistory);
+
+    try {
+      // TODO: Replace with Gemini API
+      throw new Error('AI coaching temporarily disabled - switching to Gemini');
+      /*const stream = await openai.chat.completions.create({
+        model: 'gpt-4-turbo-preview',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          ...conversationHistory,
+          { role: 'user', content: userMessage }
+        ],
+        max_tokens: 1000,
+        temperature: 0.7,
+        presence_penalty: 0.3,
+        frequency_penalty: 0.3,
+        stream: true,
+      });
+
+      return this.processStreamingResponse(stream, userProfile, userMessage);*/
+    } catch (error) {
+      console.error('AI Coaching Service Error:', error);
+      throw error;
+    }
+  }
+
   async generateResponse(
     userMessage: string,
     userProfile: UserProfile,
@@ -66,7 +114,9 @@ export class AICoachingService {
     const conversationHistory = this.formatChatHistory(chatHistory);
 
     try {
-      const response = await openai.chat.completions.create({
+      // TODO: Replace with Gemini API
+      throw new Error('AI coaching temporarily disabled - switching to Gemini');
+      /*const response = await openai.chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: [
           { role: 'system', content: systemPrompt },
@@ -99,7 +149,7 @@ export class AICoachingService {
       // Log analytics
       await this.logConversationAnalytics(userProfile.userId, userProfile.selectedCoach, tokenUsage);
 
-      return aiResponse;
+      return aiResponse;*/
 
     } catch (error) {
       console.error('AI Coaching Service Error:', error);
@@ -132,7 +182,9 @@ export class AICoachingService {
     `;
 
     try {
-      const response = await openai.chat.completions.create({
+      // TODO: Replace with Gemini API
+      throw new Error('AI coaching temporarily disabled - switching to Gemini');
+      /*const response = await openai.chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 2000,
@@ -144,7 +196,7 @@ export class AICoachingService {
         return this.parseWorkoutPlan(content, userProfile);
       }
       
-      throw new Error('No workout plan generated');
+      throw new Error('No workout plan generated');*/
     } catch (error) {
       console.error('Workout Plan Generation Error:', error);
       throw new Error('Unable to generate workout plan');
@@ -172,7 +224,9 @@ export class AICoachingService {
     `;
 
     try {
-      const response = await openai.chat.completions.create({
+      // TODO: Replace with Gemini API
+      throw new Error('AI coaching temporarily disabled - switching to Gemini');
+      /*const response = await openai.chat.completions.create({
         model: 'gpt-4-turbo-preview',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 2500,
@@ -184,7 +238,7 @@ export class AICoachingService {
         return this.parseMealPlan(content, userProfile);
       }
       
-      throw new Error('No meal plan generated');
+      throw new Error('No meal plan generated');*/
     } catch (error) {
       console.error('Meal Plan Generation Error:', error);
       throw new Error('Unable to generate meal plan');
@@ -466,5 +520,68 @@ export class AICoachingService {
       createdAt: new Date(),
       scheduledFor: new Date(),
     };
+  }
+
+  // Process streaming response from OpenAI
+  private async *processStreamingResponse(
+    stream: AsyncIterable<any>,
+    userProfile: UserProfile,
+    userMessage: string
+  ): AsyncIterable<string> {
+    let fullResponse = '';
+    let totalTokens = 0;
+
+    try {
+      for await (const chunk of stream) {
+        const content = chunk.choices?.[0]?.delta?.content;
+        if (content) {
+          fullResponse += content;
+          yield content;
+        }
+
+        // Track usage if available
+        if (chunk.usage) {
+          totalTokens = chunk.usage.total_tokens;
+        }
+      }
+
+      // Final processing after stream completion
+      const tokenUsage: TokenUsage = {
+        promptTokens: 0, // Not available in streaming
+        completionTokens: 0, // Not available in streaming
+        totalTokens,
+        cost: (totalTokens / 1000) * AICoachingService.TOKEN_COST_PER_1K
+      };
+
+      // Update conversation context
+      this.updateConversationContext(userProfile.userId, userProfile.selectedCoach, tokenUsage);
+
+      // Persist messages to Firebase
+      await this.persistMessages(userProfile.userId, userProfile.selectedCoach, userMessage, fullResponse);
+
+      // Log analytics
+      await this.logConversationAnalytics(userProfile.userId, userProfile.selectedCoach, tokenUsage);
+
+    } catch (error) {
+      console.error('Error processing streaming response:', error);
+      throw error;
+    }
+  }
+
+  // Generate mock streaming response for development
+  private async *generateMockStreamingResponse(
+    userMessage: string,
+    userProfile: UserProfile
+  ): AsyncIterable<string> {
+    const fullResponse = this.generateMockResponse(userMessage, userProfile);
+    const words = fullResponse.split(' ');
+    
+    for (let i = 0; i < words.length; i++) {
+      const chunk = i === 0 ? words[i] : ' ' + words[i];
+      yield chunk;
+      
+      // Simulate realistic typing speed
+      await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 100));
+    }
   }
 }

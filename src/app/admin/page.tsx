@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { BarChart3, CheckSquare, Users, Settings } from 'lucide-react';
 
 export default function AdminDashboard() {
@@ -36,23 +37,40 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
+    <motion.div 
+      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div 
+        className="mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         <h2 className="text-2xl font-bold text-gray-900">Admin Dashboard</h2>
         <p className="mt-1 text-sm text-gray-500">
           Manage your Force Fitness application
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {adminModules.map((module) => {
+      <motion.div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {adminModules.map((module, index) => {
           const Icon = module.icon;
           return (
-            <Link
+            <motion.div
               key={module.href}
-              href={module.href}
-              className="relative rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
+              <Link
+                href={module.href}
+                className="relative block rounded-lg border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+              >
               <div>
                 <span
                   className={`inline-flex rounded-lg p-3 ${module.color} text-white`}
@@ -68,10 +86,11 @@ export default function AdminDashboard() {
                   {module.description}
                 </p>
               </div>
-            </Link>
+              </Link>
+            </motion.div>
           );
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

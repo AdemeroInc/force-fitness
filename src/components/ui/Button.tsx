@@ -31,6 +31,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
   disabled,
   children,
   className = '',
+  onDrag,
   ...props
 }, ref) => {
   const isDisabled = disabled || loading;

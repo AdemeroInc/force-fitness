@@ -1,0 +1,53 @@
+{
+  "tasks": [
+    {
+      "title": "Replace User Badge with User Menu (Admin/Logout)",
+      "description": "CURRENT ISSUE:\n- User badge/avatar in the interface needs to be converted to a proper dropdown menu\n- Admin and logout functionality should be moved into this user menu\n- Need better organization of user-related navigation options\n\nREQUIREMENTS:\n- Replace current user badge/avatar with clickable user menu dropdown\n- Move admin access link into the user menu\n- Move logout functionality into the user menu\n- Add proper user menu styling and animations\n- Ensure mobile responsiveness for the dropdown menu\n- Add user profile information display in menu\n- Include proper menu positioning and z-index handling\n- Add click-outside-to-close functionality\n\nTECHNICAL IMPLEMENTATION:\n- Locate current user badge/avatar component in the navigation\n- Create new UserMenu dropdown component with proper positioning\n- Move admin navigation link from current location to user menu\n- Move logout button from current location to user menu\n- Add dropdown animation using Framer Motion or Tailwind transitions\n- Implement proper menu state management (open/close)\n- Add responsive design for mobile and desktop\n- Test menu positioning across different screen sizes\n- Ensure proper accessibility (keyboard navigation, ARIA labels)\n\nCOMPONENTS TO UPDATE:\n- Navigation header component (/src/components/layout/Navigation.tsx, lines 142-185)\n- User avatar/badge component\n- Admin navigation elements\n- Logout functionality\n- Mobile navigation if applicable",
+      "priority": "medium",
+      "status": "pending",
+      "assignee": "ai_agent",
+      "tags": ["frontend", "ui-ux", "navigation", "user-menu", "responsive"],
+      "createdBy": "system",
+      "metadata": {
+        "complexity": "medium",
+        "estimatedHours": 4,
+        "affectedFiles": [
+          "/src/components/layout/Navigation.tsx",
+          "/src/components/ui/UserMenu.tsx (new)"
+        ]
+      }
+    },
+    {
+      "title": "Fix Header/Navigation Bar Overlapping Content",
+      "description": "CURRENT ISSUE:\n- The fixed navigation header is covering page content\n- Layout.tsx only has pt-4 (16px) but the navigation header is approximately 80px tall\n- Content appears behind the navigation bar on all pages\n\nREQUIREMENTS:\n- Calculate actual height of the navigation header\n- Update main layout padding to accommodate fixed header\n- Ensure all pages have proper top spacing\n- Test across different screen sizes\n- Maintain responsive behavior\n\nTECHNICAL IMPLEMENTATION:\n- Measure the actual height of Navigation component\n- Update /src/app/layout.tsx main element padding from pt-4 to appropriate value\n- Consider using pt-20 or pt-24 (80px or 96px) instead of pt-4\n- Test all pages to ensure content is properly visible\n- Check mobile responsiveness\n- Verify no other layout issues are introduced\n\nAFFECTED FILES:\n- /src/app/layout.tsx (line 35: className=\"pt-4\")\n- /src/components/layout/Navigation.tsx (fixed positioning z-50)\n\nPROBLEM ANALYSIS:\n- Navigation uses: className=\"fixed top-0 left-0 right-0 z-50\"\n- Layout uses: className=\"pt-4\" (only 16px padding)\n- Navigation height appears to be ~80px based on py-4 + content\n- This creates ~64px of overlap where content is hidden",
+      "priority": "high",
+      "status": "pending",
+      "assignee": "ai_agent",
+      "tags": ["frontend", "layout", "css", "navigation", "responsive", "bug-fix"],
+      "createdBy": "system",
+      "metadata": {
+        "complexity": "low",
+        "estimatedHours": 1,
+        "affectedFiles": [
+          "/src/app/layout.tsx",
+          "/src/components/layout/Navigation.tsx"
+        ],
+        "bugType": "layout_overlap",
+        "priority_reason": "Affects all pages and user experience"
+      }
+    }
+  ],
+  "instructions": {
+    "creation_method": "Use the admin task form at /src/app/admin/tasks/page.tsx",
+    "steps": [
+      "1. Navigate to the admin tasks page in your application",
+      "2. Click 'Create New Task' button for each task",
+      "3. Copy the task details from this JSON file",
+      "4. Fill in the form with the task details",
+      "5. Set priority and assignee as specified",
+      "6. Add the specified tags",
+      "7. Submit each form to create the tasks in Firebase"
+    ],
+    "alternative": "Use taskService.createTask() programmatically with proper Firebase authentication"
+  }
+}

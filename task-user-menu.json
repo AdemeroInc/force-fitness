@@ -1,0 +1,38 @@
+{
+  "taskDetails": {
+    "title": "Replace User Badge with User Menu (Admin/Logout)",
+    "description": "CURRENT ISSUE:\n- User badge/avatar in the interface needs to be converted to a proper dropdown menu\n- Admin and logout functionality should be moved into this user menu\n- Need better organization of user-related navigation options\n\nREQUIREMENTS:\n- Replace current user badge/avatar with clickable user menu dropdown\n- Move admin access link into the user menu\n- Move logout functionality into the user menu\n- Add proper user menu styling and animations\n- Ensure mobile responsiveness for the dropdown menu\n- Add user profile information display in menu\n- Include proper menu positioning and z-index handling\n- Add click-outside-to-close functionality\n\nTECHNICAL IMPLEMENTATION:\n- Locate current user badge/avatar component in the navigation\n- Create new UserMenu dropdown component with proper positioning\n- Move admin navigation link from current location to user menu\n- Move logout button from current location to user menu\n- Add dropdown animation using Framer Motion or Tailwind transitions\n- Implement proper menu state management (open/close)\n- Add responsive design for mobile and desktop\n- Test menu positioning across different screen sizes\n- Ensure proper accessibility (keyboard navigation, ARIA labels)\n\nCOMPONENTS TO UPDATE:\n- Navigation header component (/src/components/layout/Navigation.tsx)\n- User avatar/badge component (lines 142-185)\n- Admin navigation elements\n- Logout functionality\n- Mobile navigation if applicable",
+    "priority": "medium",
+    "status": "pending",
+    "assignee": "ai_agent",
+    "tags": ["frontend", "ui-ux", "navigation", "user-menu", "responsive"],
+    "createdBy": "system",
+    "metadata": {
+      "complexity": "medium",
+      "estimatedHours": 4,
+      "affectedFiles": [
+        "/src/components/layout/Navigation.tsx",
+        "/src/components/ui/UserMenu.tsx (new)"
+      ]
+    }
+  },
+  "firebaseTaskCreation": {
+    "method": "Use the existing TaskForm component in the admin panel",
+    "location": "/src/app/admin/tasks/page.tsx",
+    "instructions": [
+      "1. Navigate to the admin tasks page in your application",
+      "2. Click 'Create New Task' button",
+      "3. Fill in the form with the above task details",
+      "4. Set priority to 'medium'",
+      "5. Set assignee to 'ai_agent'",
+      "6. Add tags: frontend, ui-ux, navigation, user-menu, responsive",
+      "7. Submit the form to create the task in Firebase"
+    ]
+  },
+  "alternativeCreation": {
+    "usingTaskService": {
+      "code": "await taskService.createTask(taskDetails)",
+      "note": "This requires proper Firebase configuration and authentication"
+    }
+  }
+}

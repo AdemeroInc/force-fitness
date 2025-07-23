@@ -98,7 +98,7 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
     setFormData(initialFormData);
   };
 
-  const renderErrorMessage = (): JSX.Element | null => {
+  const renderErrorMessage = () => {
     if (!error) return null;
     
     return (
@@ -112,7 +112,7 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
     );
   };
 
-  const renderFormFields = (): JSX.Element => (
+  const renderFormFields = () => (
     <div className="space-y-6">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
@@ -157,7 +157,7 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
     </div>
   );
 
-  const renderDivider = (): JSX.Element => (
+  const renderDivider = () => (
     <div className="relative my-8">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t border-gray-600/30" />

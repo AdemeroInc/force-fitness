@@ -18,7 +18,11 @@ export const metadata: Metadata = {
   description: "Track workouts, set goals, and achieve your fitness objectives with our modern fitness tracking application.",
   keywords: "fitness, workout, goals, tracking, health, exercise",
   authors: [{ name: "Force Fitness Team" }],
-  viewport: "width=device-width, initial-scale=1",
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
 };
 
 export default function RootLayout({

@@ -1,4 +1,4 @@
-#\!/usr/bin/env node
+#!/usr/bin/env node
 
 /**
  * Create a new task for improving AI coaching functionality
@@ -59,8 +59,7 @@ async function createCoachingImprovementTask() {
 
 createCoachingImprovementTask().then(task => {
   if (task) {
-    console.log('\n🎉 AI Coaching improvement task ready for claiming\!');
+    console.log('\n🎉 AI Coaching improvement task ready for claiming!');
   }
   process.exit(task ? 0 : 1);
 });
-EOF < /dev/null

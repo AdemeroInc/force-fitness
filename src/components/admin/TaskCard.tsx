@@ -50,41 +50,48 @@ export default function TaskCard({ task, currentUser, onStatusChange, onPriority
         </div>
       </div>
 
-      <div 
-        className="relative mb-4"
-        onMouseEnter={() => setShowFullDescription(true)}
-        onMouseLeave={() => setShowFullDescription(false)}
-      >
-        <p className="text-gray-600 truncate">
-          {task.description}
+      <div className="relative mb-4">
+        <p className="text-gray-600 text-sm leading-relaxed">
+          {task.description.length > 200 ? (
+            <>
+              {showFullDescription ? task.description : `${task.description.substring(0, 200)}...`}
+              <button
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className="ml-2 text-blue-600 hover:text-blue-800 text-xs font-medium"
+              >
+                {showFullDescription ? 'Show less' : 'Show more'}
+              </button>
+            </>
+          ) : (
+            task.description
+          )}
         </p>
-        {showFullDescription && task.description.length > 50 && (
-          <div className="absolute z-10 top-0 left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg p-3 mt-6">
-            <p className="text-gray-600 text-sm whitespace-pre-wrap">{task.description}</p>
-          </div>
-        )}
       </div>
 
-      <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm text-gray-500 mb-4">
         <div className="flex items-center gap-1">
           {task.assignee === 'ai_agent' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
-          <span>{task.assignee === 'ai_agent' ? 'AI Agent' : 'Human'}</span>
+          <span className="hidden sm:inline">{task.assignee === 'ai_agent' ? 'AI Agent' : 'Human'}</span>
+          <span className="sm:hidden">{task.assignee === 'ai_agent' ? 'AI' : 'Human'}</span>
         </div>
         {task.claimedBy && (
           <div className="flex items-center gap-1 text-blue-600">
             <Lock className="w-4 h-4" />
-            <span>Claimed by {task.claimedBy}</span>
+            <span className="hidden md:inline">Claimed by {task.claimedBy}</span>
+            <span className="md:hidden">Claimed</span>
           </div>
         )}
         {task.dueDate && (
           <div className="flex items-center gap-1">
             <Calendar className="w-4 h-4" />
-            <span>{format(task.dueDate, 'MMM d, yyyy')}</span>
+            <span className="hidden sm:inline">{format(task.dueDate, 'MMM d, yyyy')}</span>
+            <span className="sm:hidden">{format(task.dueDate, 'MMM d')}</span>
           </div>
         )}
         <div className="flex items-center gap-1">
           <Clock className="w-4 h-4" />
-          <span>{format(task.createdAt, 'MMM d, yyyy')}</span>
+          <span className="hidden sm:inline">{format(task.createdAt, 'MMM d, yyyy')}</span>
+          <span className="sm:hidden">{format(task.createdAt, 'MMM d')}</span>
         </div>
       </div>
 
@@ -98,37 +105,43 @@ export default function TaskCard({ task, currentUser, onStatusChange, onPriority
         </div>
       )}
 
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2">
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Primary Actions Row */}
+        <div className="flex flex-wrap gap-2 flex-1">
           {!isClaimed && task.status === 'pending' && (
             <button
               onClick={() => onClaim(task.id)}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center gap-2"
+              className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 flex items-center gap-2"
             >
               <Unlock className="w-4 h-4" />
-              Claim Task
+              <span className="hidden sm:inline">Claim Task</span>
+              <span className="sm:hidden">Claim</span>
             </button>
           )}
           {isClaimedByCurrentUser && (
             <button
               onClick={() => onUnclaim(task.id)}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2"
+              className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 flex items-center gap-2"
             >
               <Lock className="w-4 h-4" />
-              Release Task
+              <span className="hidden sm:inline">Release</span>
             </button>
           )}
           <button
             onClick={() => onEdit(task)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
             disabled={isClaimed && !isClaimedByCurrentUser}
           >
             Edit
           </button>
+        </div>
+        
+        {/* Status and Priority Controls */}
+        <div className="flex flex-wrap gap-2">
           <select
             value={task.status}
             onChange={(e) => onStatusChange(task.id, e.target.value as TaskStatus)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-2 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 min-w-0 flex-shrink"
             disabled={isClaimed && !isClaimedByCurrentUser}
           >
             <option value="pending">Pending</option>
@@ -137,10 +150,11 @@ export default function TaskCard({ task, currentUser, onStatusChange, onPriority
             <option value="completed">Completed</option>
             <option value="released">Released</option>
           </select>
+          
           <select
             value={task.priority}
             onChange={(e) => onPriorityChange(task.id, e.target.value as TaskPriority)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-2 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 min-w-0 flex-shrink"
             disabled={isClaimed && !isClaimedByCurrentUser}
           >
             <option value="low">Low</option>
@@ -148,17 +162,19 @@ export default function TaskCard({ task, currentUser, onStatusChange, onPriority
             <option value="high">High</option>
             <option value="urgent">Urgent</option>
           </select>
+          
+          <button
+            onClick={() => {
+              if (window.confirm('Are you sure you want to delete this task?')) {
+                onDelete(task.id);
+              }
+            }}
+            className="px-3 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50"
+          >
+            <span className="hidden sm:inline">Delete</span>
+            <span className="sm:hidden">Del</span>
+          </button>
         </div>
-        <button
-          onClick={() => {
-            if (window.confirm('Are you sure you want to delete this task?')) {
-              onDelete(task.id);
-            }
-          }}
-          className="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50"
-        >
-          Delete
-        </button>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function AdminLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !isAdmin(user)) {
+    if (!loading && !isAdmin(user || null)) {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
@@ -28,7 +28,7 @@ export default function AdminLayout({
     );
   }
 
-  if (!isAdmin(user)) {
+  if (!isAdmin(user || null)) {
     return null;
   }
 

@@ -340,10 +340,10 @@ export default function AdminUsersPage() {
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
         <div className="flex items-center">
           <div className={`w-2 h-2 rounded-full mr-2 ${
-            user.profileCompleteness > 80 ? 'bg-green-400' :
-            user.profileCompleteness > 50 ? 'bg-yellow-400' : 'bg-red-400'
+            (user.profileCompleteness ?? 0) > 80 ? 'bg-green-400' :
+            (user.profileCompleteness ?? 0) > 50 ? 'bg-yellow-400' : 'bg-red-400'
           }`} />
-          {user.profileCompleteness}%
+          {user.profileCompleteness ?? 0}%
         </div>
       </td>
 
@@ -375,7 +375,7 @@ export default function AdminUsersPage() {
           </button>
           
           <button
-            onClick={() => toggleUserStatus(user.id, user.isActive)}
+            onClick={() => toggleUserStatus(user.id, user.isActive ?? true)}
             className={`p-1 rounded ${
               user.isActive 
                 ? 'text-red-600 hover:text-red-900' 

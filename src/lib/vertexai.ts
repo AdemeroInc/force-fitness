@@ -40,14 +40,12 @@ async function initializeVertexAI(): Promise<VertexAI> {
     const project = await getProjectId();
     const location = 'us-central1';
     
-    // Initialize with service account credentials from Secret Manager
-    const serviceKey = await getSecret('vertex-ai-service-key');
-    const credentials = JSON.parse(serviceKey);
-    
+    // Initialize Vertex AI
+    // Note: Authentication should be handled by Application Default Credentials (ADC)
+    // or by setting GOOGLE_APPLICATION_CREDENTIALS environment variable
     vertexAI = new VertexAI({
       project,
       location,
-      credentials,
     });
     
     return vertexAI;

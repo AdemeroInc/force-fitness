@@ -20,14 +20,10 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { COACH_PERSONAS } from '@/lib/coaches';
-
-interface Message {
-  id: string;
-  role: 'user' | 'coach';
-  content: string;
-  timestamp: Date;
-  type?: 'text' | 'workout' | 'meal_plan' | 'achievement';
-}
+import { useAuth } from '@/lib/hooks/useAuth';
+import { useStreamingChat } from '@/lib/hooks/useStreamingChat';
+import { AICoachingService } from '@/lib/ai-coaching';
+import { UserProfile, ChatMessage } from '@/types/coaching';
 
 interface CoachChatProps {
   selectedCoach: string;
@@ -35,21 +31,47 @@ interface CoachChatProps {
 }
 
 export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'coach',
-      content: "Welcome to your transformation journey! I'm here to push you beyond your limits and unlock the greatness within you. What's your biggest fitness goal right now?",
-      timestamp: new Date(),
-      type: 'text'
-    }
-  ]);
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputMessage, setInputMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Create user profile for AI coaching
+  const userProfile: UserProfile = {
+    id: user?.uid || 'anonymous',
+    userId: user?.uid || 'anonymous',
+    selectedCoach,
+    age: 30, // These would come from user's profile
+    gender: 'other',
+    fitnessLevel: 'intermediate',
+    primaryGoals: ['general_fitness'],
+    medicalConditions: [],
+    isOnHormoneReplacement: false,
+    currentDiet: 'balanced',
+    dietaryRestrictions: [],
+    allergies: [],
+    activityLevel: 'moderate',
+    timeAvailability: { weekdays: 60, weekends: 90 },
+    availableEquipment: ['basic'],
+    workoutPreferences: [],
+    createdAt: new Date(),
+    updatedAt: new Date()
+  };
+
+  const { sendMessage, isStreaming, streamingMessage } = useStreamingChat({
+    userProfile,
+    onMessageReceived: (message) => {
+      setMessages(prev => {
+        const updated = prev.filter(m => m.id !== streamingMessageId);
+        return [...updated, message];
+      });
+    }
+  });
 
   const coach = COACH_PERSONAS.find(c => c.id === selectedCoach);
   
@@ -84,49 +106,116 @@ export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
   const theme = coachThemes[selectedCoach as keyof typeof coachThemes];
   const CoachIcon = theme?.icon || MessageCircle;
 
+  // Load conversation history on component mount
+  useEffect(() => {
+    const loadConversationHistory = async () => {
+      if (!user?.uid) return;
+      
+      try {
+        const coachingService = AICoachingService.getInstance();
+        const history = await coachingService.getConversationHistory(user.uid, selectedCoach, 20);
+        
+        if (history.length === 0) {
+          // Add initial greeting if no history exists
+          const initialMessage: ChatMessage = {
+            id: '1',
+            userId: user.uid,
+            coachId: selectedCoach,
+            content: "Welcome to your transformation journey! I'm here to push you beyond your limits and unlock the greatness within you. What's your biggest fitness goal right now?",
+            role: 'coach',
+            timestamp: new Date(),
+            messageType: 'text'
+          };
+          setMessages([initialMessage]);
+        } else {
+          setMessages(history);
+        }
+      } catch (error) {
+        console.error('Failed to load conversation history:', error);
+        // Add fallback greeting
+        const fallbackMessage: ChatMessage = {
+          id: '1',
+          userId: user?.uid || 'anonymous',
+          coachId: selectedCoach,
+          content: "Welcome back! I'm ready to continue our journey together. How can I help you today?",
+          role: 'coach',
+          timestamp: new Date(),
+          messageType: 'text'
+        };
+        setMessages([fallbackMessage]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadConversationHistory();
+  }, [user?.uid, selectedCoach]);
+
   useEffect(() => {
     scrollToBottom();
-  }, [messages]);
+  }, [messages, streamingMessage]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+    if (!inputMessage.trim() || isStreaming) return;
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
+    const userMessage: ChatMessage = {
+      id: `user-${Date.now()}`,
+      userId: user?.uid || 'anonymous',
+      coachId: selectedCoach,
       content: inputMessage,
+      role: 'user',
       timestamp: new Date(),
-      type: 'text'
+      messageType: 'text'
     };
 
-    setMessages(prev => [...prev, newMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputMessage('');
-    setIsTyping(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "INCREDIBLE! That's exactly the mindset I want to see. Let's channel that energy into a workout that will push your limits!",
-        "I can feel your determination through the screen! This is what separates legends from the rest. Ready to dominate?",
-        "YES! That's the fire I'm talking about. Your journey to greatness starts with this exact moment. Let's GO!",
-        "Perfect! You're speaking my language. I'm going to craft a plan that will transform you into the powerhouse you're meant to be!"
-      ];
+    try {
+      // Create placeholder for streaming response
+      const streamingId = `coach-${Date.now()}`;
+      setStreamingMessageId(streamingId);
 
-      const coachResponse: Message = {
-        id: (Date.now() + 1).toString(),
+      const coachResponse = await sendMessage(inputMessage, messages);
+
+      // Add final complete message
+      const finalMessage: ChatMessage = {
+        id: streamingId,
+        userId: user?.uid || 'anonymous',
+        coachId: selectedCoach,
+        content: coachResponse,
         role: 'coach',
-        content: responses[Math.floor(Math.random() * responses.length)],
         timestamp: new Date(),
-        type: 'text'
+        messageType: 'text'
       };
 
-      setMessages(prev => [...prev, coachResponse]);
-      setIsTyping(false);
-    }, 2000);
+      setMessages(prev => {
+        const updated = prev.filter(m => m.id !== streamingId);
+        return [...updated, finalMessage];
+      });
+
+    } catch (error) {
+      console.error('Failed to send message:', error);
+      
+      // Add error message
+      const errorMessage: ChatMessage = {
+        id: `error-${Date.now()}`,
+        userId: user?.uid || 'anonymous',
+        coachId: selectedCoach,
+        content: "I'm having some technical difficulties. Please try again in a moment.",
+        role: 'coach',
+        timestamp: new Date(),
+        messageType: 'text'
+      };
+
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setStreamingMessageId(null);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -141,9 +230,10 @@ export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
     // Voice input implementation would go here
   };
 
-  const renderMessage = (message: Message, index: number) => {
+  const renderMessage = (message: ChatMessage, index: number) => {
     const isCoach = message.role === 'coach';
     const isUser = message.role === 'user';
+    const isStreamingThis = message.id === streamingMessageId;
 
     return (
       <motion.div
@@ -205,7 +295,14 @@ export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
               )}
 
               <p className={`${isCoach ? 'text-white' : 'text-gray-100'} leading-relaxed`}>
-                {message.content}
+                {isStreamingThis && streamingMessage ? streamingMessage : message.content}
+                {isStreamingThis && isStreaming && (
+                  <motion.span
+                    className="inline-block ml-1 w-2 h-4 bg-white rounded-sm"
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  />
+                )}
               </p>
 
               {/* Timestamp */}
@@ -345,11 +442,17 @@ export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
       {/* Messages Area */}
       <div className="relative z-10 flex-1 overflow-y-auto p-6 scroll-smooth">
         <div className="max-w-4xl mx-auto">
-          {messages.map((message, index) => renderMessage(message, index))}
+          {loading ? (
+            <div className="flex justify-center items-center h-32">
+              <div className="text-gray-400">Loading conversation...</div>
+            </div>
+          ) : (
+            messages.map((message, index) => renderMessage(message, index))
+          )}
           
           {/* Typing Indicator */}
           <AnimatePresence>
-            {isTyping && (
+            {isStreaming && !streamingMessage && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -434,7 +537,7 @@ export default function CoachChat({ selectedCoach, onClose }: CoachChatProps) {
                   >
                     <Button
                       onClick={handleSendMessage}
-                      disabled={!inputMessage.trim()}
+                      disabled={!inputMessage.trim() || isStreaming}
                       className={`bg-gradient-to-r ${theme?.gradient} text-white font-bold px-6 py-3 rounded-xl border-0 disabled:opacity-50 disabled:scale-100`}
                     >
                       <ArrowUp size={20} />

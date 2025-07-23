@@ -206,7 +206,7 @@ export default function WorkoutsPage() {
               
               <Button 
                 onClick={() => setWorkoutStarted(false)}
-                variant="outline"
+                variant="ghost"
               >
                 End Workout
               </Button>
@@ -427,7 +427,7 @@ export default function WorkoutsPage() {
                         </div>
                       </div>
                       
-                      <Button variant="outline" size="sm">
+                      <Button variant="ghost" size="sm">
                         View Details
                       </Button>
                     </div>

@@ -54,7 +54,7 @@ export default function Navigation() {
     }
   };
 
-  const renderNavItems = (): JSX.Element[] => {
+  const renderNavItems = () => {
     const isAdmin = user?.email?.endsWith('@ademero.com') || false;
     const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
     
@@ -127,7 +127,7 @@ export default function Navigation() {
     });
   };
 
-  const renderUserSection = (): JSX.Element | null => {
+  const renderUserSection = () => {
     if (loading) {
       return (
         <motion.div

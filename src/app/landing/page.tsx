@@ -80,7 +80,7 @@ export default function LandingPage() {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('annual');
 
-  const renderHeroSection = (): JSX.Element => (
+  const renderHeroSection = () => (
     <section className="relative min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -197,7 +197,7 @@ export default function LandingPage() {
     </section>
   );
 
-  const renderFeaturesSection = (): JSX.Element => (
+  const renderFeaturesSection = () => (
     <section className="py-24 bg-white">
       <div className="container mx-auto px-4">
         <motion.div
@@ -244,7 +244,7 @@ export default function LandingPage() {
     </section>
   );
 
-  const renderCoachShowcase = (): JSX.Element => (
+  const renderCoachShowcase = () => (
     <section className="py-24 bg-gray-50">
       <div className="container mx-auto px-4">
         <motion.div
@@ -304,7 +304,7 @@ export default function LandingPage() {
     </section>
   );
 
-  const renderPricingSection = (): JSX.Element => (
+  const renderPricingSection = () => (
     <section className="py-24 bg-gradient-to-br from-indigo-900 to-purple-900">
       <div className="container mx-auto px-4">
         <motion.div
