@@ -307,7 +307,7 @@ export default function OnboardingPage() {
       </motion.div>
       
       <h1 className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 mb-6">
-        YOU'RE ALL SET!
+        YOU&apos;RE ALL SET!
       </h1>
       
       <p className="text-xl text-gray-300 mb-8">
