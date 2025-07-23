@@ -41,6 +41,8 @@ Force Fitness transcends traditional fitness apps by understanding the unique ch
 ### Development Guidelines
 - [Code Standards](./code-standards.md) - Development best practices
 - [Deployment Guide](./deployment.md) - How to deploy the application
+- [Task Management System](./task-management-system.md) - AI agent task coordination
+- [Implementation Roadmap](./implementation-roadmap.md) - Missing features and development plan
 - [Contributing Guidelines](./contributing.md) - How to contribute to the project
 
 ## 🚀 Key Differentiators
