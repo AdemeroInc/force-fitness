@@ -3,6 +3,9 @@
 ## 📋 Project Overview
 A modern fitness tracking application built with Next.js, Firebase, and exceptional UI/UX design principles.
 
+## 🎯 IMPORTANT: Task Management System
+You should always be working through all the tasks in the built-in task management system (admin feature) until they're completed. Check the admin dashboard at `/admin/tasks` to see pending tasks, claim tasks assigned to AI agents, and work through them systematically.
+
 ## 🎯 Code Quality Standards
 
 ### File & Function Size Limits
