@@ -11,11 +11,11 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const buttonVariants = {
-  primary: 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg',
-  secondary: 'bg-gray-600 hover:bg-gray-700 text-white shadow-lg',
-  success: 'bg-green-600 hover:bg-green-700 text-white shadow-lg',
-  danger: 'bg-red-600 hover:bg-red-700 text-white shadow-lg',
-  ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 border border-gray-300'
+  primary: 'bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black shadow-2xl font-black',
+  secondary: 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-2xl font-bold',
+  success: 'bg-gradient-to-r from-green-400 to-emerald-500 hover:from-green-500 hover:to-emerald-600 text-black shadow-2xl font-bold',
+  danger: 'bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white shadow-2xl font-bold',
+  ghost: 'bg-transparent hover:bg-white/10 text-white border-2 border-white/20 hover:border-white/50 backdrop-blur-sm font-bold'
 };
 
 const buttonSizes = {
@@ -35,7 +35,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(({
 }, ref) => {
   const isDisabled = disabled || loading;
   
-  const baseClasses = 'rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'rounded-xl font-bold transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-yellow-500/50 disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-wide';
   
   const classes = `${baseClasses} ${buttonVariants[variant]} ${buttonSizes[size]} ${className}`;
 

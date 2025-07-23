@@ -18,6 +18,8 @@ import {
 import { auth } from '@/lib/firebase';
 import { Button, Card } from '@/components/ui';
 import { COACH_PERSONAS } from '@/lib/coaches';
+import { isAdmin } from '@/lib/admin';
+import Link from 'next/link';
 
 interface DashboardStats {
   workoutsCompleted: number;
@@ -74,6 +76,11 @@ export default function DashboardPage() {
             <p className="text-blue-100 text-lg">
               Ready to crush your fitness goals today?
             </p>
+            {isAdmin(user) && (
+              <Link href="/admin" className="inline-flex items-center mt-4 px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg text-white font-medium transition-colors">
+                Admin Dashboard →
+              </Link>
+            )}
           </div>
           
           {currentCoach && (
