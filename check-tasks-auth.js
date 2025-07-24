@@ -5,7 +5,7 @@ const readline = require('readline');
 
 // Firebase configuration from .env.local
 const firebaseConfig = {
-  apiKey: "AIzaSyCL_snsu3sNg2LP4oTkmFN6RSxuPr2S9Jw",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: "force-fitness-1753281211.firebaseapp.com",
   projectId: "force-fitness-1753281211",
   storageBucket: "force-fitness-1753281211.firebasestorage.app",

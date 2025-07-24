@@ -18,7 +18,7 @@ This guide covers Firebase and Firestore interaction patterns for Force Fitness 
 #### For Client-Side Development
 ```bash
 # Credentials are in .env.local
-NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyCL_snsu3sNg2LP4oTkmFN6RSxuPr2S9Jw
+NEXT_PUBLIC_FIREBASE_API_KEY=REPLACE_WITH_NEW_SECURE_KEY
 NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=force-fitness-1753281211.firebaseapp.com
 NEXT_PUBLIC_FIREBASE_PROJECT_ID=force-fitness-1753281211
 ```
